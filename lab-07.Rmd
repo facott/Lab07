@@ -25,14 +25,37 @@ evals<-read.csv("data/evals.csv", row.names=1)
 
 ```{r viz-score}
 # add code here
+
+evals %>% 
+  ggplot(data = evals, 
+       mapping = aes(x = score)) +
+  geom_histogram(bins = 30)
+
+evals %>% 
+  summarise(
+    mn_score = mean(score),
+    med_score = median(score)
+  )
+
+
 ```
 
-*Add your other details and narratives here.*
+_Distribution is skewed to the left which is expected, as this shows less attractive proffesors receive lower scores._
 
 2.  Visualize and describe the relationship between `score` and `bty_avg` using `geom_point()` to represent the data. 
 
 ```{r scatterplot}
 # add code here
+
+evals %>% 
+ggplot(data = evals, 
+       mapping = aes(
+         x = score,
+         y = bty_avg
+         )) +
+  geom_point() +
+  geom_jitter()
+
 ```
 
 *Add your narrative and other details here.*
@@ -45,7 +68,9 @@ evals<-read.csv("data/evals.csv", row.names=1)
 # remove eval = FALSE from the code chunk options after filling in the blanks
 score_bty_fit <- linear_reg() %>%
   set_engine("lm") %>%
-  fit(___ ~ ___, data = ___)
+  fit(score ~ bty_avg, data = evals)
+
+tidy(score_bty_fit)
 ```
 
 ```{r tidy-score_bty_fit, eval = FALSE}
@@ -53,7 +78,6 @@ score_bty_fit <- linear_reg() %>%
 tidy(___)
 ```
 
-*Add your linear model here. Don't worry too much about notation, you can use things like score-hat.*
 
 2. Plot the data again using `geom_jitter()`, and add the regression line.
 
@@ -63,11 +87,11 @@ tidy(___)
 
 3. Interpret the slope of the linear model in context of the data.
 
-*Add your interpretation here*
+*Score = 3.88033795 + 0.06663704 x bty_avg. For each unit increase in bty_avg, there is a 0.06663704 point increase in score.*
 
 4. Interpret the intercept of the linear model in context of the data. Comment on whether or not the intercept makes sense in this context.
 
-*Add your interpretation here*
+*The intercept states that when bty_avg is 0, the teachers will receive a score of 3.88033795.*
 
 5. Determine the $R^2$ of the model and interpret it in the context of the data.
 
